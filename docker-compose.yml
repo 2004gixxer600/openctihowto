@@ -95,7 +95,7 @@ services:
       - opencti
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 4
     restart: always
   connector-export-file-stix:
     image: opencti/connector-export-file-stix:5.11.8
@@ -106,8 +106,8 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileStix2
       - CONNECTOR_SCOPE=application/json
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
     restart: always
     depends_on:
       - opencti
@@ -120,8 +120,9 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileCsv
       - CONNECTOR_SCOPE=text/csv
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
+      - "EXPORT_FILE_CSV_DELIMITER=;"
     restart: always
     depends_on:
       - opencti
@@ -134,8 +135,8 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileTxt
       - CONNECTOR_SCOPE=text/plain
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
     restart: always
     depends_on:
       - opencti
@@ -150,8 +151,8 @@ services:
       - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
       - CONNECTOR_SCOPE=application/json,text/xml
       - CONNECTOR_AUTO=true # Enable/disable auto-import of file
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
     restart: always
     depends_on:
       - opencti
@@ -166,10 +167,10 @@ services:
       - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
       - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
       - CONNECTOR_AUTO=true # Enable/disable auto-import of file
-      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
-      - IMPORT_DOCUMENT_CREATE_INDICATOR=true
+      - CONNECTOR_ONLY_CONTEXTUAL=true # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
+      - IMPORT_DOCUMENT_CREATE_INDICATOR=false
     restart: always
     depends_on:
       - opencti
@@ -190,35 +191,15 @@ services:
       - ALIENVAULT_TLP=White
       - ALIENVAULT_CREATE_OBSERVABLES=true
       - ALIENVAULT_CREATE_INDICATORS=true
-      - ALIENVAULT_PULSE_START_TIMESTAMP=2020-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2023-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
       - ALIENVAULT_REPORT_TYPE=threat-report
       - ALIENVAULT_REPORT_STATUS=New
       - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
       - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
       - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
       - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
-      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=true                      # Enable/Disable "indicates" relationships between indicators and attack patterns
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=false                      # Enable/Disable "indicates" relationships between indicators and attack patterns
       - ALIENVAULT_INTERVAL_SEC=1800
-    restart: always
-    depends_on:
-      - opencti
-  connector-cybercrimetracker:
-    image: opencti/connector-cybercrime-tracker:5.11.8
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=f48e3dbb-142b-4497-805f-be2feb364fa8
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
-      - CONNECTOR_NAME=Cybercrime-Tracker
-      - CONNECTOR_SCOPE=cybercrime-tracker
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_LOG_LEVEL=info
-      - CYBERCRIME_TRACKER_FEED_URL=http://cybercrime-tracker.net/rss.xml
-      - CYBERCRIME_TRACKER_TLP=WHITE
-      - CYBERCRIME_TRACKER_INTERVAL=86400
-      - CYBERCRIME_TRACKER_CREATE_INDICATORS=true
-      - CYBERCRIME_TRACKER_CREATE_OBSERVABLES=true
     restart: always
     depends_on:
       - opencti
@@ -249,16 +230,12 @@ services:
       - CONNECTOR_ID=d1e314b6-7e09-42db-bd5d-19b9ca461f82
       - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=MITRE Datasets"
-      - CONNECTOR_SCOPE=marking-definition,identity,attack-pattern,course-of-action,intrusion-set,campaign,malware,tool,report,external-reference-as-report
+      - CONNECTOR_SCOPE=tool,report,malware,identity,campaign,intrusion-set,attack-pattern,course-of-action,x-mitre-data-source,x-mitre-data-component,x-mitre-matrix,x-mitre-tactic,x-mitre-collection
       - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
       - CONNECTOR_RUN_AND_TERMINATE=false
-      - CONNECTOR_LOG_LEVEL=info
-      - MITRE_ENTERPRISE_FILE_URL=https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json
-      - MITRE_MOBILE_ATTACK_FILE_URL=https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack.json
-      - MITRE_ICS_ATTACK_FILE_URL=https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack.json
-      - MITRE_CAPEC_FILE_URL=https://raw.githubusercontent.com/mitre/cti/master/capec/2.1/stix-capec.json
-      - MITRE_INTERVAL=3 # In days, must be strictly greater than 1
+      - CONNECTOR_LOG_LEVEL=error
+      - MITRE_INTERVAL=7 # In days, must be strictly greater than 1
     restart: always
     depends_on:
       - opencti
@@ -273,7 +250,7 @@ services:
       - CONNECTOR_SCOPE=urlhaus
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - URLHAUS_CSV_URL=https://urlhaus.abuse.ch/downloads/csv_recent/
       - URLHAUS_IMPORT_OFFLINE=true
       - URLHAUS_CREATE_INDICATORS=true
@@ -290,7 +267,7 @@ services:
       - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - CONNECTOR_NAME=Urlscan
       - CONNECTOR_SCOPE=urlscan
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_CREATE_INDICATORS=true
@@ -314,10 +291,11 @@ services:
       - CONNECTOR_SCOPE=vxvault
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - VXVAULT_URL=http://vxvault.net/URL_List.php
       - VXVAULT_CREATE_INDICATORS=true
       - VXVAULT_INTERVAL=3 # In days, must be strictly greater than 1
+      - VXVAULT_SSL_VERIFY=False
     restart: always
     depends_on:
       - opencti
@@ -332,32 +310,10 @@ services:
       - CONNECTOR_SCOPE=IPv4-Addr
       - CONNECTOR_AUTO=true
       - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - SHODAN_TOKEN=ENTERYOURAPIKEYHERE
       - SHODAN_MAX_TLP=TLP:AMBER
       - SHODAN_CREATE_INDICATORS=true
-    restart: always
-    depends_on:
-      - opencti 
- connector-intezer-sandbox:
-    image: opencti/connector-intezer-sandbox:5.11.8
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=e617fe85-63c8-4f82-ae0b-da93032add1a
-      - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
-      - "CONNECTOR_NAME=IntezerSandbox"
-      - CONNECTOR_SCOPE=Artifact
-      - CONNECTOR_AUTO=true # Enable/disable auto-enrichment of observables
-      - CONNECTOR_CONFIDENCE_LEVEL=50 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
-      - INTEZER_SANDBOX_API_KEY=ENTERYOURAPIKEYHERE
-      - INTEZER_SANDBOX_FAMILY_COLOR=#0059f7 # Label color for family
-      - INTEZER_SANDBOX_MALICIOUS_COLOR=#d90e18 # Label color for malicious verdict
-      - INTEZER_SANDBOX_TRUSTED_COLOR=#d90e18 # And so on...
-      - INTEZER_SANDBOX_UNKNOWN_COLOR=#ffff00
-      - INTEZER_SANDBOX_SUSPICIOUS_COLOR=#f79e00
-      - INTEZER_SANDBOX_MAX_TLP=TLP:AMBER
     restart: always
     depends_on:
       - opencti 
@@ -372,7 +328,7 @@ services:
       - CONNECTOR_SCOPE=IPv4-Addr
       - CONNECTOR_AUTO=true
       - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - IPINFO_TOKEN=ENTERYOURAPIKEYHERE
       - IPINFO_MAX_TLP=TLP:AMBER
     restart: always
@@ -387,12 +343,14 @@ services:
       - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - CONNECTOR_NAME=OpenCTI
       - CONNECTOR_SCOPE=marking-definition,identity,location
-      - CONNECTOR_CONFIDENCE_LEVEL=90 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=true
       - CONNECTOR_RUN_AND_TERMINATE=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - CONFIG_SECTORS_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/sectors.json
       - CONFIG_GEOGRAPHY_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/geography.json
+      - CONFIG_COMPANIES_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/companies.json
+      - CONFIG_REMOVE_CREATOR=false
       - CONFIG_INTERVAL=2 # In days, must be strictly greater than 1
     restart: always
     depends_on:
@@ -409,10 +367,10 @@ services:
       - CONNECTOR_CONFIDENCE_LEVEL=0 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_RUN_AND_TERMINATE=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - CYBER_MONITOR_GITHUB_TOKEN=ENTERGITHUBTOKENHERE # If not provided, rate limit will be very low
       - CYBER_MONITOR_FROM_YEAR=2018
-      - CYBER_MONITOR_INTERVAL=2 # In days, must be strictly greater than 1
+      - CYBER_MONITOR_INTERVAL=4 # In days, must be strictly greater than 1
     restart: always
     depends_on:
       - opencti
@@ -426,7 +384,7 @@ services:
       - "CONNECTOR_NAME=MalwareBazaar Recent Additions"
       - CONNECTOR_CONFIDENCE_LEVEL=50 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - MALWAREBAZAAR_RECENT_ADDITIONS_API_URL=https://mb-api.abuse.ch/api/v1/
       - MALWAREBAZAAR_RECENT_ADDITIONS_COOLDOWN_SECONDS=300 # Time to wait in seconds between subsequent requests
       - MALWAREBAZAAR_RECENT_ADDITIONS_INCLUDE_TAGS=exe,dll,docm,docx,doc,xls,xlsx,xlsm,js # (Optional) Only download files if any tag matches. (Comma separated)
@@ -447,7 +405,7 @@ services:
       - CONNECTOR_SCOPE=autonomous-system,domain-name,ipv4-addr,ipv6-addr,mac-addr,x509-certificate
       - CONNECTOR_AUTO=true
       - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - IVRE_MAX_TLP=TLP:AMBER
     restart: always
     depends_on:
@@ -459,12 +417,12 @@ services:
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=88d97360-4112-4f44-b607-f2fb0702a0e4
       - CONNECTOR_TYPE=EXTERNAL_IMPORT
-      - "CONNECTOR_NAME=MISP Feed (CIRCL)"
-      - CONNECTOR_SCOPE=misp-feed-circl
+      - "CONNECTOR_NAME=MISP Feed"
+      - CONNECTOR_SCOPE=misp-feed
       - CONNECTOR_CONFIDENCE_LEVEL=20 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_RUN_AND_TERMINATE=false
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - MISP_FEED_URL=https://www.circl.lu/doc/misp/feed-osint
       - MISP_FEED_SSL_VERIFY=true # Required
       - MISP_FEED_IMPORT_FROM_DATE=2021-01-01 # Required, import all event from this date
@@ -490,7 +448,7 @@ services:
       - CONNECTOR_NAME=Tweetfeed
       - CONNECTOR_SCOPE=tweetfeed
       - CONNECTOR_CONFIDENCE_LEVEL=15
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
       - TWEETFEED_CONFIDENCE_LEVEL=15  # From 0 (Unknown) to 100 (Fully trusted)
       - TWEETFEED_CREATE_INDICATORS=true
       - TWEETFEED_CREATE_OBSERVABLES=true
@@ -498,6 +456,7 @@ services:
       - TWEETFEED_UPDATE_EXISTING_DATA=true
       - "TWEETFEED_ORG_DESCRIPTION=Tweetfeed, a connector to import IOC from Twitter."
       - TWEETFEED_ORG_NAME=Tweetfeed
+      - TWEETFEED_DAYS_BACK_IN_TIME=30 # Number of days to retrieve data back in time
     restart: always
     depends_on:
       - opencti
@@ -512,7 +471,7 @@ services:
       - CONNECTOR_SCOPE=Domain-Name,Hostname # MIME type or Stix Object
       - CONNECTOR_AUTO=false
       - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_LOG_LEVEL=error
     restart: always
     depends_on:
       - opencti
