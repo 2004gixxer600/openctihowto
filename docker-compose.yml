@@ -1,12 +1,12 @@
 version: '3'
 services:
   redis:
-    image: redis:7.2.2
+    image: redis:7.2.3
     restart: always
     volumes:
       - redisdata:/data
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
     volumes:
       - esdata:/usr/share/elasticsearch/data
     environment:
@@ -51,7 +51,7 @@ services:
       - amqpdata:/var/lib/rabbitmq
     restart: always
   opencti:
-    image: opencti/platform:5.11.11
+    image: opencti/platform:5.11.14
     environment:
       - NODE_OPTIONS=--max-old-space-size=8096
       - APP__PORT=8080
@@ -86,7 +86,7 @@ services:
       - rabbitmq
     restart: always
   worker:
-    image: opencti/worker:5.11.11
+    image: opencti/worker:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -98,7 +98,7 @@ services:
       replicas: 4
     restart: always
   connector-export-file-stix:
-    image: opencti/connector-export-file-stix:5.11.11
+    image: opencti/connector-export-file-stix:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -106,13 +106,13 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileStix2
       - CONNECTOR_SCOPE=application/json
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
     restart: always
     depends_on:
       - opencti
   connector-export-file-csv:
-    image: opencti/connector-export-file-csv:5.11.11
+    image: opencti/connector-export-file-csv:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -120,14 +120,13 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileCsv
       - CONNECTOR_SCOPE=text/csv
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
-      - "EXPORT_FILE_CSV_DELIMITER=;"
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
     restart: always
     depends_on:
       - opencti
   connector-export-file-txt:
-    image: opencti/connector-export-file-txt:5.11.11
+    image: opencti/connector-export-file-txt:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -135,13 +134,13 @@ services:
       - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
       - CONNECTOR_NAME=ExportFileTxt
       - CONNECTOR_SCOPE=text/plain
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
     restart: always
     depends_on:
       - opencti
   connector-import-file-stix:
-    image: opencti/connector-import-file-stix:5.11.11
+    image: opencti/connector-import-file-stix:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -151,13 +150,13 @@ services:
       - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
       - CONNECTOR_SCOPE=application/json,text/xml
       - CONNECTOR_AUTO=true # Enable/disable auto-import of file
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
     restart: always
     depends_on:
       - opencti
   connector-import-document:
-    image: opencti/connector-import-document:5.11.11
+    image: opencti/connector-import-document:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -166,16 +165,16 @@ services:
       - CONNECTOR_NAME=ImportDocument
       - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
       - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
-      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
-      - CONNECTOR_ONLY_CONTEXTUAL=true # Only extract data related to an entity (a report, a threat actor, etc.)
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
-      - IMPORT_DOCUMENT_CREATE_INDICATOR=false
+      - CONNECTOR_AUTO=false # Enable/disable auto-import of file
+      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
+      - IMPORT_DOCUMENT_CREATE_INDICATOR=true
     restart: always
     depends_on:
       - opencti
   connector-alienvault:
-    image: opencti/connector-alienvault:5.11.11
+    image: opencti/connector-alienvault:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -191,7 +190,7 @@ services:
       - ALIENVAULT_TLP=White
       - ALIENVAULT_CREATE_OBSERVABLES=true
       - ALIENVAULT_CREATE_INDICATORS=true
-      - ALIENVAULT_PULSE_START_TIMESTAMP=2023-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2023-01-01T00:00:00                  # BEWARE! Could be a lot of pulses!
       - ALIENVAULT_REPORT_TYPE=threat-report
       - ALIENVAULT_REPORT_STATUS=New
       - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
@@ -204,7 +203,7 @@ services:
     depends_on:
       - opencti
   abuseipdb-ipblacklist:
-    image: opencti/connector-abuseipdb-ipblacklist:5.11.11
+    image: opencti/connector-abuseipdb-ipblacklist:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -223,7 +222,7 @@ services:
     depends_on:
       - opencti
   connector-mitre:
-    image: opencti/connector-mitre:5.11.11
+    image: opencti/connector-mitre:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -240,7 +239,7 @@ services:
     depends_on:
       - opencti
   connector-urlhaus:
-    image: opencti/connector-urlhaus:5.11.11
+    image: opencti/connector-urlhaus:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -259,7 +258,7 @@ services:
     depends_on:
       - opencti
   connector-urlscan:
-    image: opencti/connector-urlscan:5.11.11
+    image: opencti/connector-urlscan:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -281,7 +280,7 @@ services:
       - opencti
       
   connector-vxvault:
-    image: opencti/connector-vxvault:5.11.11
+    image: opencti/connector-vxvault:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -300,7 +299,7 @@ services:
     depends_on:
       - opencti
   connector-shodan:
-    image: opencti/connector-shodan:5.11.11
+    image: opencti/connector-shodan:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -318,7 +317,7 @@ services:
     depends_on:
       - opencti 
   connector-ipinfo:
-    image: opencti/connector-ipinfo:5.11.11
+    image: opencti/connector-ipinfo:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -335,7 +334,7 @@ services:
     depends_on:
       - opencti
   connector-opencti:
-    image: opencti/connector-opencti:5.11.11
+    image: opencti/connector-opencti:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -356,7 +355,7 @@ services:
     depends_on:
       - opencti
   connector-aptcampaign:
-    image: opencti/connector-cyber-campaign-collection:5.11.11
+    image: opencti/connector-cyber-campaign-collection:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -375,7 +374,7 @@ services:
     depends_on:
       - opencti
   connector-malware-bazaar-recent-additions:
-    image: opencti/connector-malwarebazaar-recent-additions:5.11.11
+    image: opencti/connector-malwarebazaar-recent-additions:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -395,7 +394,7 @@ services:
     depends_on:
       - opencti
   connector-ivre:
-    image: opencti/connector-ivre:5.11.11
+    image: opencti/connector-ivre:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -411,7 +410,7 @@ services:
     depends_on:
       - opencti
   connector-misp-feed:
-    image: opencti/connector-misp-feed:5.11.11
+    image: opencti/connector-misp-feed:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -424,6 +423,7 @@ services:
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
       - MISP_FEED_URL=https://www.circl.lu/doc/misp/feed-osint
+      - MISP_FEED_URL=https://threatfox.abuse.ch/downloads/misp
       - MISP_FEED_SSL_VERIFY=true # Required
       - MISP_FEED_IMPORT_FROM_DATE=2021-01-01 # Required, import all event from this date
       - MISP_FEED_CREATE_REPORTS=true # Required, create report for MISP event
@@ -439,7 +439,7 @@ services:
     depends_on:
       - opencti
   connector-tweetfeed:
-    image: opencti/connector-tweetfeed:5.11.11
+    image: opencti/connector-tweetfeed:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -461,7 +461,7 @@ services:
     depends_on:
       - opencti
   connector-google-dns:
-    image: opencti/connector-google-dns:5.11.11
+    image: opencti/connector-google-dns:5.11.14
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -469,7 +469,7 @@ services:
       - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
       - CONNECTOR_NAME=Google DNS
       - CONNECTOR_SCOPE=Domain-Name,Hostname # MIME type or Stix Object
-      - CONNECTOR_AUTO=false
+      - CONNECTOR_AUTO=true
       - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=error
     restart: always
