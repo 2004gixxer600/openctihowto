@@ -51,7 +51,7 @@ services:
       - amqpdata:/var/lib/rabbitmq
     restart: always
   opencti:
-    image: opencti/platform:5.12.2
+    image: opencti/platform:5.12.3
     environment:
       - NODE_OPTIONS=--max-old-space-size=8096
       - APP__PORT=8080
@@ -86,7 +86,7 @@ services:
       - rabbitmq
     restart: always
   worker:
-    image: opencti/worker:5.12.2
+    image: opencti/worker:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -98,7 +98,7 @@ services:
       replicas: 4
     restart: always
   connector-export-file-stix:
-    image: opencti/connector-export-file-stix:5.12.2
+    image: opencti/connector-export-file-stix:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -112,7 +112,7 @@ services:
     depends_on:
       - opencti
   connector-export-file-csv:
-    image: opencti/connector-export-file-csv:5.12.2
+    image: opencti/connector-export-file-csv:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -126,7 +126,7 @@ services:
     depends_on:
       - opencti
   connector-export-file-txt:
-    image: opencti/connector-export-file-txt:5.12.2
+    image: opencti/connector-export-file-txt:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -140,7 +140,7 @@ services:
     depends_on:
       - opencti
   connector-import-file-stix:
-    image: opencti/connector-import-file-stix:5.12.2
+    image: opencti/connector-import-file-stix:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -156,7 +156,7 @@ services:
     depends_on:
       - opencti
   connector-import-document:
-    image: opencti/connector-import-document:5.12.2
+    image: opencti/connector-import-document:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -174,7 +174,7 @@ services:
     depends_on:
       - opencti
   connector-alienvault:
-    image: opencti/connector-alienvault:5.12.2
+    image: opencti/connector-alienvault:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -203,7 +203,7 @@ services:
     depends_on:
       - opencti
   abuseipdb-ipblacklist:
-    image: opencti/connector-abuseipdb-ipblacklist:5.12.2
+    image: opencti/connector-abuseipdb-ipblacklist:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -222,7 +222,7 @@ services:
     depends_on:
       - opencti
   connector-mitre:
-    image: opencti/connector-mitre:5.12.2
+    image: opencti/connector-mitre:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -239,7 +239,7 @@ services:
     depends_on:
       - opencti
   connector-urlhaus:
-    image: opencti/connector-urlhaus:5.12.2
+    image: opencti/connector-urlhaus:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -258,7 +258,7 @@ services:
     depends_on:
       - opencti
   connector-urlscan:
-    image: opencti/connector-urlscan:5.12.2
+    image: opencti/connector-urlscan:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -280,7 +280,7 @@ services:
       - opencti
       
   connector-vxvault:
-    image: opencti/connector-vxvault:5.12.2
+    image: opencti/connector-vxvault:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -299,7 +299,7 @@ services:
     depends_on:
       - opencti
   connector-shodan:
-    image: opencti/connector-shodan:5.12.2
+    image: opencti/connector-shodan:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -317,7 +317,7 @@ services:
     depends_on:
       - opencti 
   connector-ipinfo:
-    image: opencti/connector-ipinfo:5.12.2
+    image: opencti/connector-ipinfo:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -334,7 +334,7 @@ services:
     depends_on:
       - opencti
   connector-opencti:
-    image: opencti/connector-opencti:5.12.2
+    image: opencti/connector-opencti:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -355,7 +355,7 @@ services:
     depends_on:
       - opencti
   connector-aptcampaign:
-    image: opencti/connector-cyber-campaign-collection:5.12.2
+    image: opencti/connector-cyber-campaign-collection:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -374,7 +374,7 @@ services:
     depends_on:
       - opencti
   connector-malware-bazaar-recent-additions:
-    image: opencti/connector-malwarebazaar-recent-additions:5.12.2
+    image: opencti/connector-malwarebazaar-recent-additions:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -394,7 +394,7 @@ services:
     depends_on:
       - opencti
   connector-cisa-known-exploited-vulnerabilities:
-    image: opencti/connector-cisa-known-exploited-vulnerabilities:5.12.2
+    image: opencti/connector-cisa-known-exploited-vulnerabilities:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -414,7 +414,7 @@ services:
     depends_on:
       - opencti
    connector-misp-feed:
-    image: opencti/connector-misp-feed:5.12.2
+    image: opencti/connector-misp-feed:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -443,7 +443,7 @@ services:
     depends_on:
       - opencti
   connector-tweetfeed:
-    image: opencti/connector-tweetfeed:5.12.2
+    image: opencti/connector-tweetfeed:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -465,7 +465,7 @@ services:
     depends_on:
       - opencti
   connector-google-dns:
-    image: opencti/connector-google-dns:5.12.2
+    image: opencti/connector-google-dns:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -480,7 +480,7 @@ services:
     depends_on:
       - opencti
   connector-phishunt:
-    image: opencti/connector-phishunt:5.12.2
+    image: opencti/connector-phishunt:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -498,7 +498,7 @@ services:
     depends_on:
       - opencti
   connector-virustotal:
-    image: opencti/connector-virustotal:5.12.2
+    image: opencti/connector-virustotal:5.12.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
