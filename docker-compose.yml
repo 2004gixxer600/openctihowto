@@ -2,11 +2,11 @@ version: '3'
 services:
   redis:
     image: redis:7.2.4
-    command:
-      - bash
-      - -c
-      - redis-server --appendonly yes --maxmemory 5000000000 --maxmemory-policy volatile-lru
-      - redis-server config set client-output-buffer-limit "slave 836870912 836870912 0"
+    #command:
+    #  - bash
+    #  - -c
+    #  - redis-server --appendonly yes --maxmemory 5000000000 --maxmemory-policy volatile-lru
+    #  - redis-server config set client-output-buffer-limit "slave 836870912 836870912 0"
     restart: always
     volumes:
       - redisdata:/data
@@ -21,6 +21,8 @@ services:
       # - cluster.name=docker-cluster
       - xpack.ml.enabled=false
       - xpack.security.enabled=false
+      - thread_pool.search.queue_size=5000
+      - logger.org.elasticsearch.discovery="ERROR"
       - "ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY_SIZE} -Xmx${ELASTIC_MEMORY_SIZE}"
     restart: always
     ulimits:
@@ -171,7 +173,7 @@ services:
       - CONNECTOR_NAME=ImportDocument
       - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
       - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
-      - CONNECTOR_AUTO=false # Enable/disable auto-import of file
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
       - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
       - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=info
