@@ -2,10 +2,10 @@ version: '3'
 services:
   redis:
     image: redis:7.2.4
-    #command:
-    #  - bash
-    #  - -c
-    #  - redis-server --appendonly yes --maxmemory 5000000000 --maxmemory-policy volatile-lru
+    command:
+      - bash
+      - -c
+      - redis-server --appendonly yes --maxmemory 5000000000 --maxmemory-policy volatile-lru
     #  - redis-server config set client-output-buffer-limit "slave 836870912 836870912 0"
     restart: always
     volumes:
