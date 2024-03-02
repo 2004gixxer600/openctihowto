@@ -211,11 +211,10 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=ef2efb3c-1200-47e7-a40e-952b20b2ac5b # Valid UUIDv4
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=AbuseIPDB IP Blacklist"
       - CONNECTOR_SCOPE=abuseipdb
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=info
+      - CONNECTOR_CONFIDENCE_LEVEL=80 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=error
       - ABUSEIPDB_URL=https://api.abuseipdb.com/api/v2/blacklist
       - ABUSEIPDB_API_KEY=ENTERYOURAPIKEYHERE
       - ABUSEIPDB_SCORE=100
@@ -230,7 +229,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=d1e314b6-7e09-42db-bd5d-19b9ca461f82
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=MITRE Datasets"
       - CONNECTOR_SCOPE=tool,report,malware,identity,campaign,intrusion-set,attack-pattern,course-of-action,x-mitre-data-source,x-mitre-data-component,x-mitre-matrix,x-mitre-tactic,x-mitre-collection
       - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
@@ -247,11 +245,9 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=7ff6b8fd-7a4c-4cdc-9f1d-c5a8ff65a724
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=Abuse.ch URLhaus"
       - CONNECTOR_SCOPE=urlhaus
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_LOG_LEVEL=error
       - URLHAUS_CSV_URL=https://urlhaus.abuse.ch/downloads/csv_recent/
       - URLHAUS_IMPORT_OFFLINE=true
@@ -260,35 +256,12 @@ services:
     restart: always
     depends_on:
       - opencti
-  connector-urlscan:
-    image: opencti/connector-urlscan:6.0.3
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=a21c6a2f-4862-451a-9fd5-65d483339675
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
-      - CONNECTOR_NAME=Urlscan
-      - CONNECTOR_SCOPE=urlscan
-      - CONNECTOR_LOG_LEVEL=error
-      - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_CREATE_INDICATORS=true
-      - CONNECTOR_TLP=white
-      - CONNECTOR_LABELS=Phishing,Phishfeed
-      - CONNECTOR_INTERVAL=86400 # seconds, 1d
-      - URLSCAN_URL=https://urlscan.io/api/v1/pro/phishfeed?format=json&q=date:>now-1d
-      - URLSCAN_API_KEY=ENTERYOURAPIKEYHERE
-    restart: always
-    depends_on:
-      - opencti
-      
-  connector-vxvault:
+ connector-vxvault:
     image: opencti/connector-vxvault:6.0.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=7abd828e-738d-4c88-ab16-9799e1432a98
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=VX Vault URL list"
       - CONNECTOR_SCOPE=vxvault
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
@@ -307,15 +280,14 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=d7915b7f-8896-4e4b-a59b-c17a31ce5b34
-      - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
       - CONNECTOR_NAME=Shodan
       - CONNECTOR_SCOPE=IPv4-Addr
       - CONNECTOR_AUTO=true
-      - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=error
       - SHODAN_TOKEN=ENTERYOURAPIKEYHERE
       - SHODAN_MAX_TLP=TLP:AMBER
       - SHODAN_CREATE_INDICATORS=true
+      - SHODAN_DEFAULT_SCORE=50
     restart: always
     depends_on:
       - opencti 
@@ -325,7 +297,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=56593e28-2886-455d-94f3-c84deddb2ad3
-      - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
       - CONNECTOR_NAME=IpInfo
       - CONNECTOR_SCOPE=IPv4-Addr
       - CONNECTOR_AUTO=true
@@ -342,7 +313,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=21f7d068-3c55-4b52-96ca-64543e3f452e
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - CONNECTOR_NAME=OpenCTI
       - CONNECTOR_SCOPE=marking-definition,identity,location
       - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
@@ -363,10 +333,8 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=94fe0177-3037-4d64-94b5-d4f81c977d8c
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=APT & Cybercriminals Campaign Collection"
       - CONNECTOR_SCOPE=report
-      - CONNECTOR_CONFIDENCE_LEVEL=0 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
@@ -382,7 +350,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=ffcc016c-5f7b-41a7-9712-e5d75ef40153
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=MalwareBazaar Recent Additions"
       - CONNECTOR_CONFIDENCE_LEVEL=50 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_UPDATE_EXISTING_DATA=false
@@ -402,7 +369,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=a8e1bcd9-c221-47d1-b9a5-27d407e315bb
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - "CONNECTOR_NAME=CISA Known Exploited Vulnerabilities"
       - CONNECTOR_SCOPE=cisa
       - CONNECTOR_CONFIDENCE_LEVEL=80 # From 0 (Unknown) to 100 (Fully trusted)
@@ -430,7 +396,6 @@ services:
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
       - MISP_FEED_URL=https://www.circl.lu/doc/misp/feed-osint
-      - MISP_FEED_URL=https://threatfox.abuse.ch/downloads/misp
       - MISP_FEED_SSL_VERIFY=true # Required
       - MISP_FEED_IMPORT_FROM_DATE=2021-01-01 # Required, import all event from this date
       - MISP_FEED_CREATE_REPORTS=true # Required, create report for MISP event
@@ -447,35 +412,12 @@ services:
     restart: always
     depends_on:
       - opencti
-  connector-tweetfeed:
-    image: opencti/connector-tweetfeed:6.0.3
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=8fcb5e31-08cd-48b9-93e1-ef90a6aa0486
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
-      - CONNECTOR_NAME=Tweetfeed
-      - CONNECTOR_SCOPE=tweetfeed
-      - CONNECTOR_CONFIDENCE_LEVEL=15
-      - CONNECTOR_LOG_LEVEL=error
-      - TWEETFEED_CONFIDENCE_LEVEL=15  # From 0 (Unknown) to 100 (Fully trusted)
-      - TWEETFEED_CREATE_INDICATORS=true
-      - TWEETFEED_CREATE_OBSERVABLES=true
-      - TWEETFEED_INTERVAL=1
-      - TWEETFEED_UPDATE_EXISTING_DATA=true
-      - "TWEETFEED_ORG_DESCRIPTION=Tweetfeed, a connector to import IOC from Twitter."
-      - TWEETFEED_ORG_NAME=Tweetfeed
-      - TWEETFEED_DAYS_BACK_IN_TIME=30 # Number of days to retrieve data back in time
-    restart: always
-    depends_on:
-      - opencti
   connector-google-dns:
     image: opencti/connector-google-dns:6.0.3
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=d13b5275-19e1-4141-bb9e-ec68d2cfec2b
-      - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
       - CONNECTOR_NAME=Google DNS
       - CONNECTOR_SCOPE=Domain-Name,Hostname # MIME type or Stix Object
       - CONNECTOR_AUTO=true
@@ -490,7 +432,6 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=aec7010c-5c3d-4304-8ba2-6bafdc7226b0
-      - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - CONNECTOR_NAME=Phishunt
       - CONNECTOR_SCOPE=phishunt
       - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
@@ -508,11 +449,9 @@ services:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=e30f3f47-bc03-4dec-b256-db4c6c9e22f5
-      - CONNECTOR_TYPE=INTERNAL_ENRICHMENT
       - CONNECTOR_NAME=VirusTotal
       - CONNECTOR_SCOPE=StixFile,Artifact,IPv4-Addr,Domain-Name,Url
       - CONNECTOR_AUTO=true # Enable/disable auto-enrichment of observables
-      - CONNECTOR_CONFIDENCE_LEVEL=50 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=error
       - CONNECTOR_EXPOSE_METRICS=false
       - VIRUSTOTAL_TOKEN=YOURVIRUSTOTALAPITOKENKEYHERE
