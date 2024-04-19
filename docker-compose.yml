@@ -7,7 +7,7 @@ services:
       - -c
       - redis-server --appendonly yes --maxmemory 5000000000 --maxmemory-policy allkeys-lru 
       # Uncomment the line below and comment the above line if you have large deployments and alot of server resources to dedicated to OpenCTI
-      # redis-server --maxmemory 24000000000 --maxmemory-policy allkeys-lfu --client-output-buffer-limit "slave 836870912 836870912 0" --client-output-buffer-limit "pubsub 128MB 64MB 60"
+      # redis-server --activedefrag yes --maxmemory 24000000000 --maxmemory-policy allkeys-lfu --client-output-buffer-limit "slave 836870912 836870912 0" --client-output-buffer-limit "pubsub 128MB 64MB 60"
     # NOTE: If you are tight on resources, you might want to try "volatile-lru" instead of the default "allkeys-lru".
     restart: always
     volumes:
