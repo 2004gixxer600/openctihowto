@@ -9,7 +9,10 @@ The username and password for the root user of Ubuntu are both "opencti".  The l
 For more details and instructions for modification and changes, go to the "/home/opencti/openctihome sub-folder and read the "howto.txt" file for more documentation.  
 Click below to download the OVA file fast from one of our servers.
 
+
 Download - https://cve.netmanageit.com/downloads/OpenCTIturnkey.ova 
+
+
 
 You can also visit our public read only instance of OpenCTI to do research, learn and play with the platform.  
 
