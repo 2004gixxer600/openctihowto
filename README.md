@@ -2,7 +2,8 @@
 
 Updated 08/15/24
 
-I have created a fully turnkey ready to go VirtualBox VM OVA, with host OS, Docker and OpenCTI configured and installed!  This will  get you goinging quick with your own up to date OpenCTI instance with the most popular connectors!  
+I have created a fully turnkey ready to go VirtualBox VM OVA, with host OS, Docker and OpenCTI configured and installed!  This will  get you goinging quick with your own up to date OpenCTI instance with the most popular connectors!
+
 The VM is loaded with Ubuntu 23.04 Server, no GUI to keep overhead low. The newest version of Docker and Docker Compose installed, and OpenCTI 6.2.13 setup and running automatically, with all containers set to restart always. Once booted up, it will start to pull down more data soon as it is launched.
 
 The username and password for the root user of Ubuntu are both "opencti".  The login creds for the OpenCTI admin, are "opencti@opencti.com" and the password "opencti".  The VM is set to use a bridged adapter and DHCP.  To find your IP address, pop a shell and do an "ip a" command.  Then visit the OpenCTI main login portal screen @ http://YOUR-IP:8080 . 
