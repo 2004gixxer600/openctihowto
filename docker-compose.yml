@@ -390,10 +390,9 @@ services:
       - CONNECTOR_ID=a8e1bcd9-c221-47d1-b9a5-27d407e315bb
       - "CONNECTOR_NAME=CISA Known Exploited Vulnerabilities"
       - CONNECTOR_SCOPE=cisa
-      - CONNECTOR_CONFIDENCE_LEVEL=80 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=True
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_DURATION_PERIOD=P2D
       - CISA_CATALOG_URL=https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
       - CISA_CREATE_INFRASTRUCTURES=false
       - CISA_TLP=TLP:CLEAR
@@ -402,7 +401,7 @@ services:
     depends_on:
       - opencti
    connector-misp-feed:
-    image: opencti/connector-misp-feed:6.3.1
+    image: opencti/connector-misp-feed:6.3.5
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -431,39 +430,8 @@ services:
     restart: always
     depends_on:
       - opencti
-  connector-google-dns:
-    image: opencti/connector-google-dns:6.3.1
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=d13b5275-19e1-4141-bb9e-ec68d2cfec2b
-      - CONNECTOR_NAME=Google DNS
-      - CONNECTOR_SCOPE=Domain-Name,Hostname # MIME type or Stix Object
-      - CONNECTOR_AUTO=true
-      - CONNECTOR_CONFIDENCE_LEVEL=100 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_LOG_LEVEL=error
-    restart: always
-    depends_on:
-      - opencti
-  connector-phishunt:
-    image: opencti/connector-phishunt:6.3.1
-    environment:
-      - OPENCTI_URL=http://opencti:8080
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=aec7010c-5c3d-4304-8ba2-6bafdc7226b0
-      - CONNECTOR_NAME=Phishunt
-      - CONNECTOR_SCOPE=phishunt
-      - CONNECTOR_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
-      - CONNECTOR_UPDATE_EXISTING_DATA=false
-      - CONNECTOR_LOG_LEVEL=error
-      - PHISHUNT_API_KEY= # Optional, if not provided, consume only https://phishunt.io/feed.txt
-      - PHISHUNT_CREATE_INDICATORS=true
-      - PHISHUNT_INTERVAL=3 # In days, must be strictly greater than 1
-    restart: always
-    depends_on:
-      - opencti
   connector-virustotal:
-    image: opencti/connector-virustotal:6.3.1
+    image: opencti/connector-virustotal:6.3.5
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
