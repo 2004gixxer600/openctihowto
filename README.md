@@ -7,7 +7,7 @@ I have created a fully turnkey ready to go VirtualBox VM OVA, with host OS, Dock
 The VM is loaded with Ubuntu 24.04 LTS Desktop with VBox guest additions.  I found the desktop is better for fixing network issues for users who use it and other usability improvements.   The newest version of Docker and Docker Compose installed, and OpenCTI 6.3.10 setup and running automatically, with all containers set to restart always. Once booted up, it will start to pull down more data soon as it is launched.
 
 The username and password for the root user of Ubuntu are both "opencti".  The login creds for the OpenCTI admin, are "opencti@opencti.com" and the password "opencti".  The VM is set to use a bridged adapter and DHCP.  To find your IP address, pop a shell and do an "ip a" command.  Then visit the OpenCTI main login portal screen @ http://YOUR-IP:8080 . 
-For more details and instructions for modification and changes, go to the "/home/opencti/openctihome sub-folder and read the "howto.txt" file for more documentation.  
+For more details and instructions for modification and changes, go to the "/home/opencti/OpenCTI sub-folder and read the "instructions.txt" file for more documentation.  
 Click below to download the OVA file fast from one of our servers.
 
 
