@@ -10,7 +10,7 @@ For more details and instructions for modification and changes, there is a "inst
 Click below to download the OVA file fast from one of our servers.
 
 
-Download - [https://mirrors.netmanageit.com/NetmanageIT-.ova](https://mirrors.netmanageit.com/NetmanageIT-OpenCTI-6.6.5.ova)
+Download - [https://mirrors.netmanageit.com/NetmanageIT-OpenCTI-6.6.5.ova](https://mirrors.netmanageit.com/NetmanageIT-OpenCTI-6.6.5.ova)
 
 
 You can also visit our public read only instance of OpenCTI to do research, learn and play with the platform.  
