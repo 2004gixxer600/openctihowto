@@ -46,7 +46,7 @@ services:
         soft: 65536
         hard: 65536
   minio:
-    image: 
+    image: minio/minio:RELEASE.2025-06-13T11-33-47Z
     volumes:
       - s3data:/data
     ports:
@@ -70,7 +70,7 @@ services:
       - "0.0.0.0:15672:15672"
     restart: always
   opencti:
-    image: opencti/platform:6.6.8
+    image: opencti/platform:6.7.11
     environment:
       - NODE_OPTIONS=--max-old-space-size=8096
       - APP__PORT=8080
@@ -112,7 +112,7 @@ services:
       - rabbitmq
     restart: always
   worker:
-    image: opencti/worker:6.6.8
+    image: opencti/worker:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -124,7 +124,7 @@ services:
       replicas: 3
     restart: always
   connector-export-report-pdf:
-    image: opencti/connector-export-report-pdf:6.6.8
+    image: opencti/connector-export-report-pdf:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -148,7 +148,7 @@ services:
     depends_on:
       - opencti
   connector-export-file-stix:
-    image: opencti/connector-export-file-stix:6.6.8
+    image: opencti/connector-export-file-stix:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -162,7 +162,7 @@ services:
     depends_on:
       - opencti
   connector-export-file-csv:
-    image: opencti/connector-export-file-csv:6.6.8
+    image: opencti/connector-export-file-csv:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -175,7 +175,7 @@ services:
     depends_on:
       - opencti
   connector-export-file-txt:
-    image: opencti/connector-export-file-txt:6.6.8
+    image: opencti/connector-export-file-txt:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -188,7 +188,7 @@ services:
     depends_on:
       - opencti
   connector-import-file-stix:
-    image: opencti/connector-import-file-stix:6.6.8
+    image: opencti/connector-import-file-stix:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -203,7 +203,7 @@ services:
     depends_on:
       - opencti
   connector-import-document:
-    image: opencti/connector-import-document:6.6.8
+    image: opencti/connector-import-document:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -214,14 +214,13 @@ services:
       - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
       - CONNECTOR_AUTO=true # Enable/disable auto-import of file
       - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=info
       - IMPORT_DOCUMENT_CREATE_INDICATOR=true
     restart: always
     depends_on:
       - opencti
   connector-analysis:
-    image: opencti/connector-import-document:6.6.8
+    image: opencti/connector-import-document:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -232,20 +231,18 @@ services:
       - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
       - CONNECTOR_AUTO=true # Enable/disable auto-import of file
       - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
-      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=info
     restart: always
     depends_on:
       - opencti
   connector-opencti:
-    image: opencti/connector-opencti:6.6.8
+    image: opencti/connector-opencti:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=GENERATEUUID4HERE
       - "CONNECTOR_NAME=OpenCTI Datasets"
       - CONNECTOR_SCOPE=marking-definition,identity,location
-      - CONNECTOR_CONFIDENCE_LEVEL=100
       - CONNECTOR_UPDATE_EXISTING_DATA=true
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
@@ -258,7 +255,7 @@ services:
     depends_on:
       - opencti
   connector-alienvault:
-    image: opencti/connector-alienvault:6.6.8
+    image: opencti/connector-alienvault:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -295,7 +292,7 @@ services:
     depends_on:
       - opencti
 #  connector-cisa-known-exploited-vulnerabilities:
-#    image: opencti/connector-cisa-known-exploited-vulnerabilities:6.6.8
+#    image: opencti/connector-cisa-known-exploited-vulnerabilities:6.7.11
 #    environment:
 #      - OPENCTI_URL=http://opencti:8080
 #      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -312,7 +309,7 @@ services:
 #    depends_on:
 #      - opencti
   connector-abuseipdb-ipblacklist:
-    image: opencti/connector-abuseipdb-ipblacklist:6.6.8
+    image: opencti/connector-abuseipdb-ipblacklist:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -320,16 +317,17 @@ services:
       - "CONNECTOR_NAME=AbuseIPDB IP Blacklist"
       - CONNECTOR_SCOPE=abuseipdb
       - CONNECTOR_LOG_LEVEL=error
+      - CONNECTOR_DURATION_PERIOD=PT24H
       - ABUSEIPDB_URL=https://api.abuseipdb.com/api/v2/blacklist
       - ABUSEIPDB_API_KEY=APIKEYHERE
-      - ABUSEIPDB_SCORE=100
+      - ABUSEIPDB_SCORE=75
       - ABUSEIPDB_LIMIT=10000
-      - ABUSEIPDB_INTERVAL=3 #Day
+      - ABUSEIPDB_TLP_LEVEL=clear #Day
     restart: always
     depends_on:
       - opencti
   connector-vxvault:
-    image: opencti/connector-vxvault:6.6.8
+    image: opencti/connector-vxvault:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -345,7 +343,7 @@ services:
     depends_on:
       - opencti
   connector-shodan:
-    image: opencti/connector-shodan:6.6.8
+    image: opencti/connector-shodan:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -364,7 +362,7 @@ services:
     depends_on:
       - opencti
   connector-ipinfo:
-    image: opencti/connector-ipinfo:6.6.8
+    image: opencti/connector-ipinfo:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -381,7 +379,7 @@ services:
     depends_on:
       - opencti
   connector-aptcampaign:
-    image: opencti/connector-cyber-campaign-collection:6.6.8
+    image: opencti/connector-cyber-campaign-collection:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -397,7 +395,7 @@ services:
     depends_on:
       - opencti
   connector-malware-bazaar-recent-additions:
-    image: opencti/connector-malwarebazaar-recent-additions:6.6.8
+    image: opencti/connector-malwarebazaar-recent-additions:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -414,7 +412,7 @@ services:
     depends_on:
       - opencti
   connector-mitre:
-    image: opencti/connector-mitre:6.6.8
+    image: opencti/connector-mitre:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -429,14 +427,13 @@ services:
     depends_on:
       - opencti
   connector-mitre-atlas:
-    image: opencti/connector-mitre-atlas:6.6.8
+    image: opencti/connector-mitre-atlas:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - CONNECTOR_ID=GENERATEUUID4HERE
       - "CONNECTOR_NAME=MITRE ATLAS"
       - CONNECTOR_SCOPE=identity,attack-pattern,course-of-action,relationship,x-mitre-collection,x-mitre-matrix,x-mitre-tactic
-      - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_RUN_AND_TERMINATE=false
       - CONNECTOR_LOG_LEVEL=error
       - MITRE_ATLAS_URL=https://raw.githubusercontent.com/mitre-atlas/atlas-navigator-data/main/dist/stix-atlas.json
@@ -445,7 +442,7 @@ services:
     depends_on:
       - opencti
   connector-dnstwist:
-    image: opencti/connector-dnstwist:6.6.8
+    image: opencti/connector-dnstwist:6.7.11
     environment:
       - CONNECTOR_NAME=DNS_TWISTER
       - CONNECTOR_SCOPE=Domain-Name
@@ -464,7 +461,7 @@ services:
     depends_on:
       - opencti
   connector-disarm-framework:
-    image: opencti/connector-disarm-framework:6.6.8
+    image: opencti/connector-disarm-framework:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -479,7 +476,7 @@ services:
     depends_on:
       - opencti
   connector-cve:
-    image: opencti/connector-cve:6.6.8
+    image: opencti/connector-cve:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -493,13 +490,13 @@ services:
       - CVE_INTERVAL=2 # Required, in hours advice min 2
       - CVE_MAX_DATE_RANGE=120 # In days, max 120
       - CVE_MAINTAIN_DATA=true # Required, retrieve only updated data
-      - CVE_PULL_HISTORY=false # If true, CVE_HISTORY_START_YEAR is required
+      - CVE_PULL_HISTORY=true # If true, CVE_HISTORY_START_YEAR is required
       - CVE_HISTORY_START_YEAR=2019 # Required if pull_history is True, min 2019 (see documentation CVE and CVSS base score V3.1)
     restart: always
     depends_on:
       - opencti
   connector-cpe:
-    image: opencti/connector-cpe:6.6.8
+    image: opencti/connector-cpe:6.7.11
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -515,7 +512,7 @@ services:
     depends_on:
       - opencti
 #  connector-urlhaus:
-#    image: opencti/connector-urlhaus:6.6.8
+#    image: opencti/connector-urlhaus:6.7.11
 #    environment:
 #      - OPENCTI_URL=http://opencti:8080
 #      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -533,7 +530,7 @@ services:
 #    depends_on:
 #      - opencti
 #  connector-google-safebrowsing:
-#    image: opencti/connector-google-safebrowsing:6.6.8
+#    image: opencti/connector-google-safebrowsing:6.7.11
 #    environment:
 #      # Connector's definition parameters:
 #      - CONNECTOR_NAME=Google Safe Browsing
@@ -552,7 +549,7 @@ services:
 #    depends_on:
 #      - opencti
 #  connector-ipqs:
-#    image: opencti/connector-ipqs:6.6.8
+#    image: opencti/connector-ipqs:6.7.11
 #    environment:
 #      - OPENCTI_URL=http://opencti:8080
 #      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -572,7 +569,7 @@ services:
 #    depends_on:
 #      - opencti
 #  connector-greynoise:
-#    image: opencti/connector-greynoise:6.6.8
+#    image: opencti/connector-greynoise:6.7.11
 #    environment:
 #      - OPENCTI_URL=http://opencti:8080
 #      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -591,7 +588,7 @@ services:
 #    depends_on:
 #      - opencti
 #  connector-maltiverse:
-#    image: opencti/connector-maltiverse:6.6.8
+#    image: opencti/connector-maltiverse:6.7.11
 #    environment:
 #      - OPENCTI_URL=http://opencti:8080
 #      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
